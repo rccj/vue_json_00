@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"
+    integrity="sha256-ngFW3UnAN0Tnm76mDuu7uUtYEcG3G5H1+zioJw3t+68=" crossorigin="anonymous"></script>
+  <style>
+    html,
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    h1 {
+      font-size: 18px;
+    }
+
+    a {
+      color: #369;
+      text-decoration: none;
+    }
+
+    .teacher {
+      font-size: 12px;
+    }
+
+    .lesson {
+      /*父層設定一個relative */
+      position: relative;
+      display: inline-block;
+      width: 240px;
+      /* border: 1px solid gray; */
+      border-radius: 8px;
+      margin: 12px;
+      padding: 8px;
+      padding-top: 150px;
+      overflow: hidden;
+      height: 100px;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, .3);
+    }
+
+    .image {
+      /* absolute控制圖片左上方貼齊 */
+      position: absolute;
+      width: 100%;
+      height: 150px;
+      left: 0;
+      top: 0;
+      background-size: cover;
+      background-position: center center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div v-for="lesson in lessons" class="lesson">
+      <!-- <img :src="lesson.img" height="100"/> -->
+      <div class="image" :style="imgStyle(lesson.img)"></div>
+      <!-- 用div 綁定style屬性執行函示，可較有彈性改變圖片 -->
+      <a :href="lesson.url">
+        <h1>{{lesson.title}}</h1>
+      </a>
+      <span class="teacher">{{lesson.teacher}}</span>
+    </div>
+
+  </div>
+
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        lessons: [],
+      },
+      methods: {
+        //回傳backgroundImage:url 給style
+        imgStyle(img) {
+          return {
+            backgroundImage: `url(${img})`,
+          }
+        }
+      },
+      mounted() {
+        //生命週期
+        fetch('./data.json')
+          .then(res => res.json())
+          //.then(function(response){
+          // return response.json();
+          // }）
+          .then(lessons => this.lessons = lessons);
+          //.then(function(lessons){
+          // return this.lessons = lessons
+          // })
+        //把取回來的Json陣列指定給自己的lessons
+
+
+        // $.getJSON('./data.json').then(lessons => this.lessons = lessons)
+        // jquery方法
+
+        //axios.get('./data.json').then(res =>this.lessons = res.data)
+        //axios方法
+      },
+    })
+  </script>
+</body>
+
+</html>
